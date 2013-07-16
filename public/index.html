@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="liveDeploy">
+<head>
+    <meta charset="utf-8">
+    <title>Live Deploy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    </script>
+</head>
+
+<body>
+	<div ng-controller='ChecklistController' class="container-fluid" >
+  <div class="row-fluid">
+  	<span class="span12">
+		<div class="progress progress-danger progress-striped">
+  			<div class="bar" style="width: {{percentCompleted()}}%"></div>
+		</div>
+  	</span>
+  </div>
+  <div  class="row-fluid">
+  	<span class="span12">
+  		<div class="row-fluid">
+  			<span class="span9">
+      			<div ng-repeat="item in checklistItems" class"row">
+      				<span class="span10"><h3>{{item.title}}</h3></span>
+      				<span class="span2"><button class="completedBtn btn btn-large" ng-class="{true: 'btn-success', false:'btn-danger'}[item.completed]" href="#" ng-click="itemCompleted(item)"><i class="icon-white" ng-class="{true: 'icon-ok-sign', false:'icon-remove-sign'}[item.completed]"></i></button></span>
+      			</div>
+  			</span>
+  			<span class="span3">
+  				<h2>This is where the chat goes</h2>
+  			</span>
+  		</div>
+  	</span>
+  </div>
+</div>
+
+<script src="lib/angular.min.js"></script>
+<script src="lib/angular-socket-io.js"></script>
+<script src="lib/underscore.min.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/controllers.js"></script>
+
+</body>
+</html>
