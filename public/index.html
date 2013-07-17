@@ -30,8 +30,15 @@
       				<span class="span2"><button class="completedBtn btn btn-large" ng-class="{true: 'btn-success', false:'btn-danger'}[item.completed]" href="#" ng-click="itemCompleted(item)"><i class="icon-white" ng-class="{true: 'icon-ok-sign', false:'icon-remove-sign'}[item.completed]"></i></button></span>
       			</div>
   			</span>
-  			<span class="span3">
-  				<h2>This is where the chat goes</h2>
+  			<span class="span3" ng-controller='ChatCtrl'>
+  				<div ng-repeat="message in messages" class="row">
+  					<span class="whoSaidIt">{{message.user}}</span>:<span  class="whatTheySaid">{{message.text}}</span>
+  				</div>
+  				<form ng-submit="sendMessage()">
+  					<input type="text" placeholder="Chat here…" ng-model="message">
+  					<input type="submit" value="Send">
+  				</form>
+  				
   			</span>
   		</div>
   	</span>
@@ -41,9 +48,11 @@
 <script src="lib/angular.min.js"></script>
 <script src="lib/angular-socket-io.js"></script>
 <script src="lib/underscore.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/controllers.js"></script>
+<script src="js/services.js"></script>
 
 </body>
 </html>
