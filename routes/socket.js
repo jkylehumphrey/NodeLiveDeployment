@@ -67,12 +67,50 @@ var chatMessages = (function(){
 	
 }());
 
+var checklist = (function(){
+	
+	var items = [{id: 0, title: 'AgriMine', completed: false}, 
+				{id: 1, title: 'MDM', completed:false},
+				{id: 2, title: 'AgriMine Reports', completed:false},
+				{id: 3, title: 'GSR', completed:false},
+				{id: 4, title: 'Sales Management', completed:false},
+				{id: 5, title: 'MDM', completed:false},
+				{id: 6, title: 'MDM', completed:false},
+				{id: 7, title: 'MDM', completed:false},
+				{id: 8, title: 'MDM', completed:false},
+				{id: 9, title: 'MDM', completed:false},
+				{id: 10, title: 'MDM', completed:false},
+				{id: 11, title: 'MDM', completed:false},
+				{id: 12, title: 'MDM', completed:false},
+				{id: 13, title: 'MDM', completed:false},
+				{id: 14, title: 'MDM', completed:false},
+				{id: 15, title: 'MDM', completed:false},
+				{id: 16, title: 'MDM', completed:false},
+				{id: 17, title: 'MDM', completed:false}
+				
+	];
+	
+	var getItems = function(){
+		return items;
+	};
+	
+	var completeItem = function(item){
+		var item = underscore.findWhere(items, {id: item.id});
+		item.completed = !item.completed;
+	}
+	return{
+		getItems: getItems,
+		completeItem: completeItem
+	}
+	
+}());
+
 // export function for listening to the socket
 module.exports = function (socket) {
   var name = userNames.getGuestName();
 
   // send the new user their name and a list of users
-  socket.emit('init', {
+  socket.emit('init:chat', {
     name: name,
     users: userNames.get(),
     messages: chatMessages.get()
@@ -96,25 +134,6 @@ module.exports = function (socket) {
     
   });
 
-  // validate a user's name change, and broadcast it on success
-  socket.on('change:name', function (data, fn) {
-    if (userNames.claim(data.name)) {
-      var oldName = name;
-      userNames.free(oldName);
-
-      name = data.name;
-      
-      socket.broadcast.emit('change:name', {
-        oldName: oldName,
-        newName: name
-      });
-
-      fn(true);
-    } else {
-      fn(false);
-    }
-  });
-
   // clean up when a user leaves, and broadcast it to other users
   socket.on('disconnect', function () {
     socket.broadcast.emit('user:left', {
@@ -122,4 +141,16 @@ module.exports = function (socket) {
     });
     userNames.free(name);
   });
+  
+  // checklist
+  socket.on('checklist:itemCompleted', function(item){
+  	checklist.completeItem(item);
+  	socket.broadcast.emit('checklist:itemCompleted', checklist.getItems());
+  });
+  
+  // send the new user their name and a list of users
+  socket.emit('init:checklist', {
+    checklistItems: checklist.getItems()
+  });
+
 };

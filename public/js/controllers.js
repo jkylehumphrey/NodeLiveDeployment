@@ -19,20 +19,33 @@ angular.module('myApp.controllers', []).
   });
   
 */
-  function ChecklistController($scope){
+function LoginController($scope){
+	$('#myModal').modal('show');
+}
+
+function ChecklistController($scope, socket){
+	
   
   window.scope = $scope;
-  
-  	$scope.checklistItems = [{id: 0, title: 'AgriMine', completed: true}, {id: 1, title: 'MDM', completed:false}];
+  	
+  	$scope.checklistItems = [];
   	
   	$scope.percentCompleted = function(){
   		return (_.where($scope.checklistItems, {completed:true}).length / ($scope.checklistItems.length * 1.0)) * 100;
   	}
   	
   	$scope.itemCompleted = function(item){
-  		console.log(item);
+  		socket.emit('checklist:itemCompleted', item);
   		item.completed = !item.completed;
   	}
+  	
+  	socket.on('init:checklist', function(data){
+  		$scope.checklistItems = data.checklistItems;
+  	});
+  	
+  	socket.on('checklist:itemCompleted', function(items){
+  		$scope.checklistItems = items;
+  	});
   	
 }
   
@@ -40,7 +53,7 @@ function ChatCtrl($scope, socket){
 	 // Socket listeners
   // ================
 
-  socket.on('init', function (data) {
+  socket.on('init:chat', function (data) {
     $scope.name = data.name;
     $scope.users = data.users;
     $scope.messages = data.messages;
@@ -51,19 +64,11 @@ function ChatCtrl($scope, socket){
   });
 
   socket.on('user:join', function (data) {
-    $scope.messages.push({
-      user: 'chatroom',
-      text: 'User ' + data.name + ' has joined.'
-    });
     $scope.users.push(data.name);
   });
 
   // add a message to the conversation when a user disconnects or leaves the room
   socket.on('user:left', function (data) {
-    $scope.messages.push({
-      user: 'chatroom',
-      text: 'User ' + data.name + ' has left.'
-    });
     var i, user;
     for (i = 0; i < $scope.users.length; i++) {
       user = $scope.users[i];
