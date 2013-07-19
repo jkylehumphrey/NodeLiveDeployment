@@ -29,7 +29,10 @@
   		<div class="row-fluid" ng-cloak>
   			<span class="span9">
       			<div ng-repeat="item in checklistItems" class"row">
-      				<span class="span10"><h3>{{item.title}}</h3></span>
+      				<span class="span10">
+      					<h3 class="row">{{item.title}}</h3>
+      					<small class="row">{{item.modBy}} : {{item.modAt}}</small>
+      				</span>
       				<span class="span2"><button class="completedBtn btn btn-large" ng-class="{true: 'btn-success', false:'btn-danger'}[item.completed]" href="#" ng-click="itemCompleted(item)"><i class="icon-white" ng-class="{true: 'icon-ok-sign', false:'icon-remove-sign'}[item.completed]"></i></button></span>
       			</div>
   			</span>
@@ -44,7 +47,6 @@
   				</div>
   				<form ng-submit="sendMessage()">
   					<input type="text" placeholder="Chat here…" ng-model="message">
-  					<input type="submit" value="Send">
   				</form>
   				
   			</span>
@@ -55,7 +57,7 @@
 
 
 <!-- Modal -->
-<div ng-controller="LoginController" id="logInModal" data-keyboard="false" data-backdrop="static" data-show="true" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div ng-controller="LoginController" id="logInModal" data-keyboard="false" data-backdrop="static" data-show="true" modal="true" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <h3 id="myModalLabel">Identify Yourself...</h3>
   </div>
@@ -69,7 +71,7 @@
 
 <script src="lib/angular.min.js"></script>
 <script src="lib/jQuery.min.js"></script>
-<script src="lib/bootstrap.min.js"></script>
+<script src="lib/bootstrap-angular.min.js"></script>
 <script src="lib/underscore.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 

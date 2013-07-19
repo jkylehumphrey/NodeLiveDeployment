@@ -1,0 +1,10 @@
+{
+	"czarId": 0,
+	"users":[
+		{"id": 0, "name": "Kyle Humphrey", "email": "khumphrey@xsinc.com", "loggedIn": false},
+		{"id": 1, "name": "Jarrett Lee", "email": "jlee@xsinc.com", "loggedIn": false},
+		{"id": 2, "name": "Chad Robertson", "email": "crobertson@xsinc.com", "loggedIn": false},
+		{"id": 3, "name": "Beth Quinton", "email": "bquinton@xsinc.com", "loggedIn": false},
+		{"id": 4, "name": "Ian Kaden", "email": "ikaden@xsinc.com", "loggedIn": false}
+	]
+}

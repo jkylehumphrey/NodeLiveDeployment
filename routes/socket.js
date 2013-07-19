@@ -1,6 +1,25 @@
 var underscore = require('underscore');
 // Keep track of which names are used so that there are no duplicates
 var userNames = (function () {
+
+	var userObj = require('./users.json');
+	var czarId = userObj.czarId;
+	var users = userObj.users;
+	
+	var getById = function(id){
+		return _.findWhere(users, {id: id});
+	};
+	
+	var logInByEmail = function(email){
+		var user = underscore.findWhere(users, {email:email});
+		if(user){
+			user.loggedIn = true;
+			return true;
+		}
+		else
+			return false;
+	};
+	
     var names = {};
 
     var claim = function (name) {
@@ -69,26 +88,17 @@ var chatMessages = (function () {
 
 var checklist = (function () {
 
-    var items = [{ id: 0, title: 'Program Management', completed: false },
-				{ id: 1, title: 'Program Management - Reports', completed: false },
-				{ id: 2, title: 'Sales Management - Reports Sales Management', completed: false },
-				{ id: 3, title: 'Basic - Reports Basic', completed: false },
-				{ id: 4, title: 'Sales Management', completed: false },
-				{ id: 5, title: 'Grower Seed Reporting', completed: false },
-				{ id: 6, title: 'Data Management', completed: false },
-				{ id: 7, title: 'My Account', completed: false },
-				{ id: 8, title: 'Tools', completed: false },
-				{ id: 9, title: 'Data Visibility', completed: false },
-				{ id: 10, title: 'Crop Expert Seller access', completed: false }
-	];
+    var items = require('./checklist.json');
 
     var getItems = function () {
         return items;
     };
 
-    var completeItem = function (item) {
+    var completeItem = function (item, user) {
         var item = underscore.findWhere(items, { id: item.id });
         item.completed = !item.completed;
+        item.modBy = user;
+        item.modAt = new Date();
     }
     return {
         getItems: getItems,
@@ -135,9 +145,9 @@ module.exports = function (socket) {
     });
 
     // checklist
-    socket.on('checklist:itemCompleted', function (item) {
-        checklist.completeItem(item);
-        socket.broadcast.emit('checklist:itemCompleted', checklist.getItems());
+    socket.on('checklist:itemChecked', function (data) {
+        checklist.completeItem(data.item, data.user);
+        socket.emit('checklist:updateChecklist', checklist.getItems());
     });
 
     // send the new user their name and a list of users

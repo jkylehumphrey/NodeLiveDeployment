@@ -41,7 +41,7 @@ function ChecklistController($scope, socket) {
     }
 
     $scope.itemCompleted = function (item) {
-        socket.emit('checklist:itemCompleted', item);
+        socket.emit('checklist:itemChecked', {item: item, user: $scope.name});
         item.completed = !item.completed;
     }
 
@@ -49,7 +49,8 @@ function ChecklistController($scope, socket) {
         $scope.checklistItems = data.checklistItems;
     });
 
-    socket.on('checklist:itemCompleted', function (items) {
+    socket.on('checklist:updateChecklist', function (items) {
+    alert('yes');
         $scope.checklistItems = items;
     });
 
